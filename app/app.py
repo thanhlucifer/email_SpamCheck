@@ -1,6 +1,11 @@
 import streamlit as st
 import joblib
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from preprocessing.text_cleaner import clean_text
+
 
 # Load model và vectorizer
 model = joblib.load('model/spam_model.pkl')
