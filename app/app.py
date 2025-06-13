@@ -1,12 +1,23 @@
 import streamlit as st
-from model.predict import predict_spam
+import joblib
+from preprocessing.text_cleaner import clean_text
 
-st.title("📧 Email Spam Detector")
-email = st.text_area("Nhập nội dung email:")
+# Load model và vectorizer
+model = joblib.load('model/spam_model.pkl')
+vectorizer = joblib.load('model/vectorizer.pkl')
+
+# Tiêu đề
+st.title("📧 Email Spam Checker")
+
+# Nhập email
+text = st.text_area("Nhập nội dung email cần kiểm tra:")
 
 if st.button("Kiểm tra"):
-    if email.strip() == "":
-        st.warning("Vui lòng nhập nội dung!")
+    if text.strip() == "":
+        st.warning("⚠️ Vui lòng nhập nội dung email.")
     else:
-        result = predict_spam(email)
+        cleaned = clean_text(text)
+        X = vectorizer.transform([cleaned])
+        prediction = model.predict(X)[0]
+        result = "🟥 SPAM" if prediction == 1 else "🟩 HAM (không phải spam)"
         st.success(f"Kết quả: {result}")

@@ -1,12 +1,13 @@
 import re
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-
-stop_words = set(stopwords.words('english'))
 
 def clean_text(text):
+    if not isinstance(text, str):
+        return ''
+    
     text = text.lower()
-    text = re.sub(r'[^a-zA-Z]', ' ', text)
-    tokens = word_tokenize(text)
-    filtered = [word for word in tokens if word not in stop_words]
-    return ' '.join(filtered)
+    text = re.sub(r'http\S+|www\S+|https\S+', '', text)
+    text = re.sub(r'\bescapenumber\b|\bescapelong\b', '', text)
+    text = re.sub(r'[^a-z0-9\s]', '', text)
+    text = re.sub(r'\s+', ' ', text).strip()
+    
+    return text
